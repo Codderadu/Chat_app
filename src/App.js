@@ -19,12 +19,13 @@ const signOutHandler=()=>{
 
 
 function App() {
-  const q=query(collection(db,"message"),orderBy("createdAt","asc"))
+
   const [user,setUser]=useState(false);
   const [message,setMessage]=useState("");
   const [messages,setMessages]=useState([]);
   const scrollBehavior=useRef(null);
- console.log(user);
+  
+
   const submitHandler=async(e)=>{
     e.preventDefault();
     try {
@@ -43,15 +44,17 @@ function App() {
   }
 
   useEffect(()=>{
+    const q=query(collection(db,"message"),orderBy("createdAt","asc"))
    const unsascribe= onAuthStateChanged(auth,(data)=>{
       setUser(data);
     });
 
     const unsuscribeMessage= onSnapshot(q,(snap)=>{
-      setMessages(snap.docs.map((item)=>{
+      setMessages(snap.docs.map((item)=>
+           {
             const id=item.id;
-            return{id,...item.data()}
-      }))
+            return{id,...item.data()}}
+    ))
       
     })
      
@@ -59,7 +62,7 @@ function App() {
         unsascribe(); 
         unsuscribeMessage();
       }
-    
+      
      
 
   },[])
